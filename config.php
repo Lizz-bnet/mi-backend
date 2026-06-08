@@ -1,12 +1,14 @@
 <?php
-$host = getenv('MYSQLHOST') . ':' . getenv('MYSQLPORT');
+$host = getenv('MYSQLHOST');
+$port = getenv('MYSQLPORT');
+$db   = getenv('MYSQLDATABASE');
 $user = getenv('MYSQLUSER');
 $pass = getenv('MYSQLPASSWORD');
-$db   = getenv('MYSQLDATABASE');
 
-$conn = new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error) {
-    die("Error: " . $conn->connect_error);
+try {
+    $conn = new PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("Error: " . $e->getMessage());
 }
 ?>
